@@ -25,9 +25,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Prepare only the public app files
         run: |
-          mkdir -p _site/src
+          mkdir -p _site/src _site/assets
           cp index.html _site/index.html
+          cp dashboard.html _site/dashboard.html
           cp src/styles.css src/parser.js src/app.js src/favicon.svg _site/src/
+          cp assets/minimalist-study-planner-still-life.png assets/pastel-study-planner-workspace.png _site/assets/
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload static site

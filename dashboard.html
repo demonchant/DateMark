@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f4f1e9">
+  <meta name="description" content="Review course dates against their source wording and export only the dates you confirm.">
+  <link rel="icon" href="src/favicon.svg" type="image/svg+xml">
+  <title>DateMark Dashboard</title>
+  <link rel="stylesheet" href="src/styles.css">
+  <script defer src="src/parser.js"></script>
+  <script defer src="src/app.js"></script>
+</head>
+<body class="dashboard-page">
+  <a class="skip-link" href="#tool">Skip to DateMark dashboard</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="DateMark home"><span class="brand-mark">D</span><span>DateMark</span></a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="./">Overview</a>
+      <a href="index.html#how-it-works">How it works</a>
+      <a class="nav-cta" href="index.html#privacy">Privacy &amp; limits</a>
+    </nav>
+  </header>
+  <main id="main" class="dashboard-main">
+    <section class="dashboard-intro" aria-labelledby="dashboard-title">
+      <p class="eyebrow"><span class="eyebrow-rule"></span> DATE REVIEW WORKSPACE</p>
+      <h1 id="dashboard-title">Your course dates,<br><em>ready for your review.</em></h1>
+      <p>Course deadlines may appear in several places, such as assignments, modules, a syllabus, and a course calendar. Paste authorized wording from a source you are checking, then verify each date against its exact line before exporting.</p>
+      <p class="dashboard-boundary"><strong>Private by design:</strong> DateMark processes the pasted text in this browser tab. It is not saved or uploaded. Refreshing clears this session.</p>
+    </section>    <section id="tool" class="tool-section" aria-labelledby="tool-title">
+      <div class="tool-heading"><div><p class="eyebrow">YOUR COURSE TEXT, YOUR CALL</p><h2 id="tool-title">Try DateMark</h2></div><p>Nothing is saved. Nothing is sent. Start with a few lines from your course outline.</p></div>
+      <div class="workspace" aria-label="DateMark tool">
+        <div class="source-panel panel">
+          <div class="section-head">
+            <div><span class="step">01 / SOURCE</span><h2>Bring the course wording</h2></div>
+            <span class="local-tag">STAYS IN THIS TAB</span>
+          </div>
+          <label for="course-name">Course or source name <span class="optional">optional</span></label>
+          <input id="course-name" maxlength="80" autocomplete="off" placeholder="Name this source (optional)">
+          <label for="source-text">Paste text with clearly stated deadlines</label>
+          <textarea id="source-text" maxlength="40000" rows="10" spellcheck="false" placeholder="Paste course wording exactly as it appears in your outline. No example records are loaded."></textarea>
+          <div class="input-meta"><span id="char-count">0 / 40,000 characters</span><span>Text is not saved or sent anywhere.</span></div>
+          <div class="parse-row">
+            <div class="year-setting"><label for="course-year">Year for dates that omit one</label><input id="course-year" type="number" min="2000" max="2100" inputmode="numeric" placeholder="Ask me first"></div>
+            <button id="find-dates" class="button button-primary" type="button">Find written dates <span aria-hidden="true">&rarr;</span></button>
+          </div>
+          <p class="format-hint">Supports English month names and ISO dates on lines that mention coursework. Numeric dates like 03/04 stay unresolved.</p>
+        </div>
+
+        <div class="review-panel panel" aria-labelledby="review-title">
+          <div class="section-head review-head">
+            <div><span class="step">02 / REVIEW</span><h2 id="review-title">Nothing moves without you</h2></div>
+            <span id="candidate-count" class="count-pill">0 found</span>
+          </div>
+          <div id="status" class="status" role="status" aria-live="polite">Add course text to begin. DateMark only recognizes dates it can point to.</div>
+          <div id="candidate-list" class="candidate-list"></div>
+          <div id="empty-state" class="empty-state">
+            <span class="empty-icon" aria-hidden="true">&rarr;</span>
+            <p>Your review list will appear here.</p>
+            <span>Dates without enough context stay out of the calendar.</span>
+          </div>
+          <div class="export-bar">
+            <div><span class="step">03 / TAKE IT WITH YOU</span><p><strong id="confirmed-count">0</strong> confirmed <span>&middot; all-day dates</span></p></div>
+            <button id="export-ics" class="button button-dark" type="button" disabled>Download .ics <span aria-hidden="true">&darr;</span></button>
+          </div>
+        </div>
+      </div>
+    </section>  </main>
+  <footer class="dashboard-footer">
+    <a class="brand footer-brand" href="./"><span class="brand-mark">D</span><span>DateMark</span></a>
+    <span>Review first. Export only what you confirm.</span>
+    <a href="index.html#privacy">Privacy &amp; limits</a>
+  </footer>
+</body>
+</html>
