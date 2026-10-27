@@ -46,12 +46,12 @@ test('rejects invalid dates and bad input configuration', () => {
 });
 
 test('ICS export includes only confirmed all-day entries and escapes content', () => {
-  const item = { id: 'quiz-1', status: 'confirmed', date: '2026-11-02', title: 'Quiz; 1, final', sourceText: 'Quiz due Nov 2, 2026', line: 1 };
+  const item = { id: 'quiz-1', status: 'confirmed', date: '2026-11-02', title: 'Quiz; 1, final', sourceName: 'BIO 101 syllabus', sourceText: 'Quiz due Nov 2, 2026', line: 1 };
   const ics = parser.toICS([item], new Date('2026-10-27T12:00:00.000Z'));
   assert.match(ics, /BEGIN:VCALENDAR/);
   assert.match(ics, /DTSTART;VALUE=DATE:20261102/);
   assert.match(ics, /SUMMARY:Quiz\\; 1\\, final/);
-  assert.match(ics, /DESCRIPTION:Source line 1: Quiz due Nov 2\\, 2026/);
+  assert.match(ics, /DESCRIPTION:Source: BIO 101 syllabus\\; line 1: Quiz due Nov 2\\, 2026/);
   assert.match(ics, /END:VCALENDAR\r\n$/);
   assert.throws(() => parser.toICS([{ ...item, status: 'needs_review' }]), /Only confirmed/);
   assert.throws(() => parser.toICS([]), /Confirm at least one/);

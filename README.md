@@ -2,7 +2,7 @@
 
 **Review a course deadline against its source. Export only what you confirm.**
 
-DateMark is a browser-based student prototype that turns supported written course dates into a reviewable iCalendar (`.ics`) file. It keeps each date next to the line it came from and leaves uncertain dates for the student to resolve.
+DateMark is a browser-based student prototype that brings written deadlines from several course sources into one review session. It keeps each candidate attached to its named source and exact line, leaves uncertain dates for the student to resolve, and exports only items the student confirms to an iCalendar (`.ics`) file.
 
 | Project link | URL |
 |---|---|
@@ -26,7 +26,7 @@ The study supports fragmented deadline lookup as a problem worth exploring; it d
 3. Review each candidate beside its exact source line; edit, confirm, or leave it out.
 4. Download an `.ics` file containing only confirmed dates.
 
-The app does not fetch course pages, identify which course source is newest, resolve conflicting deadlines, or verify calendar import. A missing year or ambiguous numeric date is not silently treated as correct.
+The student can add multiple separately named text sources to the same in-memory session. DateMark does not fetch course pages, identify which source is newest, resolve conflicting deadlines, or verify calendar import. The exported event description carries the source label, line number, and original wording. A missing year or ambiguous numeric date is not silently treated as correct.
 
 ### How it was built
 
@@ -42,7 +42,7 @@ No real syllabus was available to share with permission, so the demo uses clearl
 
 ### Accomplishments
 
-The prototype implements a complete narrow path from pasted wording to source-linked candidates, user confirmation, and an actual `.ics` download. The demo shows the product flow and a read-back of the generated calendar file. Four genuine screenshots from that recording are included below and in [`media/`](media/).
+The prototype implements a narrow path from multiple separately named pasted sources to source-linked candidates, user confirmation, and an actual `.ics` download with provenance. The currently linked video shows the previous single-source flow and a read-back of its generated calendar file; it does not yet demonstrate the newer multi-source workflow. Four genuine screenshots from that recording are included below and in [`media/`](media/).
 
 ### What is next
 
@@ -78,7 +78,7 @@ The published static app needs only a modern browser. To serve the project local
 node server.js
 ```
 
-Open [http://localhost:4173/](http://localhost:4173/), select **Open dashboard**, and paste text you are authorized to use. Select **Find written dates**, review candidates, and confirm one before downloading. No API key, account, or package installation is required to run the product.
+Open [http://localhost:4173/](http://localhost:4173/), select **Open dashboard**, and paste text you are authorized to use. Name the course/source, select **Find written dates**, then select **Add another source** to bring another course page into the same review list. Review source lines and dates, confirm the entries you want, and download the `.ics` file. Its event descriptions retain the source label and line. No API key, account, or package installation is required to run the product.
 
 For the test commands, install the development dependency from `package.json` with `npm install`. The pinned `@playwright/test` package is for browser tests only; it is not shipped in the app.
 
