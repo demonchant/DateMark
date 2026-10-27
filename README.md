@@ -1,126 +1,131 @@
 # DateMark
 
-**A source-first way to turn clearly written course deadlines into a calendar file.** Review every candidate against its original line, resolve uncertainty yourself, and export only what you confirm.
+**Review a course deadline against its source. Export only what you confirm.**
 
-DateMark is a focused student prototype for reviewing dates in course text. The parser runs in the browser and uses deterministic rules. The product overview is on the landing page; date entry, review, and export live on a separate dashboard page. It does not use AI, send pasted text to a backend, connect to a calendar account, or claim that a calendar import succeeded.
+DateMark is a browser-based student prototype that turns supported written course dates into a reviewable iCalendar (`.ics`) file. It keeps each date next to the line it came from and leaves uncertain dates for the student to resolve.
 
-- **Source repository:** https://github.com/demonchant/DateMark
-- **Expected GitHub Pages URL:** https://demonchant.github.io/DateMark/ (available only after Pages is enabled and the deployment workflow succeeds)
-- **Current deployment status:** The user reports the original landing URL is live. The separate dashboard, two page-specific images, and updated Pages artifact are ready locally. The latest push did not update GitHub; the dashboard route is not yet live.
+| Project link | URL |
+|---|---|
+| Live demo | [https://demonchant.github.io/DateMark/](https://demonchant.github.io/DateMark/) |
+| Working dashboard | [https://demonchant.github.io/DateMark/dashboard.html](https://demonchant.github.io/DateMark/dashboard.html) |
+| 2:34 video demo | [DateMark — LaunchPad Hacks demo](https://youtu.be/xHnsVDTlIQ4) |
+| Source repository | [github.com/demonchant/DateMark](https://github.com/demonchant/DateMark) |
 
-## The problem
+## The project story
 
-Students may find due dates in multiple places across a course site. A 2024 mixed-method survey of 324 students found that students ranked assignment deadlines as the most important syllabus content, yet they reported using four LMS locations to find dates: assignments, modules, syllabus, and calendar. That supports a problem of fragmented deadline visibility; it does not prove that DateMark itself is useful or that students want another tool. [Study in Advances in Physiology Education](https://journals.physiology.org/doi/full/10.1152/advan.00004.2024)
+### Inspiration
 
-DateMark addresses the narrow manual handoff from course text to a student's own calendar: paste wording from a source you are checking, inspect each detected date beside its source line, and export only after confirmation. It does not crawl LMS pages, compare source freshness, or determine which conflicting course location is authoritative. Student interviews, representative syllabus testing, and measured impact have not yet been completed.
+A 2024 study of 324 science students reported that assignment deadlines were their most important syllabus content, while students consulted multiple locations in their learning systems to find course information. That motivated a focused product question: can a student move a written deadline into a personal calendar while keeping the source wording close enough to check?
 
-## What DateMark does
+The study supports fragmented deadline lookup as a problem worth exploring; it does not prove DateMark is useful or that students want another tool. User interviews and measured product impact have not yet been completed. [Read the study in *Advances in Physiology Education*.](https://journals.physiology.org/doi/full/10.1152/advan.00004.2024)
 
-1. Paste course text you are authorized to use.
-2. Find supported explicit dates on coursework-related lines.
-3. Review each candidate beside its source line; edit, confirm, or reject it.
-4. Download an iCalendar file containing only confirmed valid dates.
-5. Import that file into your own calendar if you choose. DateMark does not connect to the calendar or verify an import.
+### What it does
 
-Date candidates are not treated as truth automatically. Missing years and ambiguous numeric dates remain unresolved; the user has to check and resolve them.
+1. Paste course text that you have permission to use.
+2. Find a limited set of written dates on coursework-related lines.
+3. Review each candidate beside its exact source line; edit, confirm, or leave it out.
+4. Download an `.ics` file containing only confirmed dates.
 
-## How it works
+The app does not fetch course pages, identify which course source is newest, resolve conflicting deadlines, or verify calendar import. A missing year or ambiguous numeric date is not silently treated as correct.
 
-The static HTML, CSS, and JavaScript app parses text in the browser. Candidate state is held in page memory. The parser associates candidates with exact source spans and checks calendar validity. The exporter validates confirmed dates and generates a standard all-day iCalendar file for download.
+### How it was built
 
-There is no app backend, database, AI model, third-party API, account, or calendar OAuth integration. The static page itself is served over the network when hosted; pasted course text is processed in the browser and is not sent to a server by the app.
+The app uses HTML, CSS, and JavaScript. A deterministic parser runs in the browser, validates recognized dates, and retains source-line offsets. The review UI lets the student edit, confirm, or reject candidates. The exporter validates confirmed dates and serializes an all-day iCalendar file. A small Node.js built-in HTTP server is provided for local serving.
 
-## Try it out
+There is no app backend, database, account, AI feature, model request, calendar connection, or runtime third-party package. Pasted text is processed in the browser tab and is not sent to a DateMark server. Refreshing clears the in-memory session.
 
-### Synthetic demonstration input
+### Challenges and what we learned
 
-No real course document is bundled. If you do not have permission to share a syllabus, this explicitly fictional excerpt can demonstrate the parser. Keep its label visible and do not present it as a real course, student result, or evidence of demand.
+Dates can be ambiguous even when a parser recognizes their shape. A date may omit its year or use numeric ordering that varies by locale. DateMark keeps these cases visible for human review and ties a candidate to its source line instead of implying the parser knows the authoritative deadline.
 
-For the **Course or source name** field, enter **SYNTHETIC DEMO - Environmental Data Systems 101**.
+No real syllabus was available to share with permission, so the demo uses clearly labeled fictional course text. It demonstrates the interaction only; it is not user data, validation, or evidence of student outcomes.
 
-For the **Course or source name** field, enter: **SYNTHETIC DEMO - Environmental Data Systems 101**
+### Accomplishments
 
-~~~text
-SYNTHETIC DEMO INPUT - fictional course outline, not a real syllabus.
-Intro to Environmental Data Systems (fictional course)
-Project proposal due January 21, 2027.
-Midterm exam: February 18, 2027.
-Homework 4 due March 5.
-Final exam scheduled for 04/12/2027; confirm month/day order with the instructor.
-~~~
+The prototype implements a complete narrow path from pasted wording to source-linked candidates, user confirmation, and an actual `.ics` download. The demo shows the product flow and a read-back of the generated calendar file. Four genuine screenshots from that recording are included below and in [`media/`](media/).
 
-The written January and February dates are intended to demonstrate supported formats. The missing-year homework date and numeric final-exam date should remain unresolved for review. If the actual app behaves differently, report the observed behavior rather than editing the result or claiming success.
+### What is next
 
-### Local run
+The next step is to test with students using course materials they are allowed to share. Feedback could guide broader date-format support and accessibility improvements. Any future calendar import or LMS connection would need explicit permissions and clear source provenance.
 
-Requires Node.js 24 or a modern browser. The product has no runtime package installation or API key requirement.
+## Demo and screenshots
 
-~~~powershell
+The video uses fictional, visibly labeled course text. It shows the problem, the landing page, dashboard, source review, confirmation, `.ics` download/read-back, technical approach, and limitations. The final card links the project demo and repository and credits the synthesized narration.
+
+### Landing page
+
+![DateMark landing page with the study planner still-life hero](media/01-landing-page.png)
+
+### Dashboard and date candidates
+
+![DateMark dashboard showing labeled synthetic course text and detected candidates](media/02-dashboard-and-results.png)
+
+### Source review
+
+![A DateMark candidate beside its source line, with a date requiring manual review](media/03-source-review.png)
+
+### Calendar file read-back
+
+![Read-back of the generated iCalendar file from the recorded synthetic demo](media/04-calendar-file-readback.png)
+
+The screenshots show the fictional demo only. They contain no real course document or student record.
+
+## Run locally
+
+The published static app needs only a modern browser. To serve the project locally, use Node.js 24 (the version used for local checks):
+
+```powershell
 node server.js
-~~~
+```
 
-Open http://localhost:4173, select **Open dashboard**, paste authorized text on the dashboard, and select **Find written dates**. Review and confirm a candidate before downloading. Refreshing clears the in-memory session.
+Open [http://localhost:4173/](http://localhost:4173/), select **Open dashboard**, and paste text you are authorized to use. Select **Find written dates**, review candidates, and confirm one before downloading. No API key, account, or package installation is required to run the product.
 
-## Supported input and known limitations
+For the test commands, install the development dependency from `package.json` with `npm install`. The pinned `@playwright/test` package is for browser tests only; it is not shipped in the app.
 
-- English month names and ISO dates are supported when they appear on coursework-related lines.
-- Numeric dates such as **04/12/2027**, relative dates, and dates without a year are not silently guessed. They require review or manual correction.
-- Exported events are all-day events. DateMark does not infer a timezone or time of day.
-- No scanned-PDF/OCR, LMS integration, change detection, reminders, calendar sync, cloud storage, or multi-user collaboration.
-- Student demand and performance on real course materials have not been validated.
-- Browser end-to-end behavior, a public deployment, and external calendar import are not verified yet.
+## Built with and credits
 
-## Built with
+- **Product:** HTML, CSS, JavaScript, browser `Blob` download API, iCalendar format.
+- **Local serving:** Node.js built-in HTTP server.
+- **Hosting:** GitHub Pages with GitHub Actions (`actions/configure-pages`, `actions/upload-pages-artifact`, `actions/deploy-pages`).
+- **Browser test tooling:** `@playwright/test` 1.64.1 development dependency; no runtime packages.
+- **Generated illustrations:** the two landing/dashboard illustrations were supplied for this project by the entrant. The exact image-generation service/model was not recorded in this repository; add its name to the Devpost credits if known and required by its terms.
+- **AI assistance:** OpenAI Codex assisted with research, implementation, and documentation. The shipped product has no AI feature or model/API call.
+- **Video narration:** Microsoft Edge TTS, voice `en-NG-EzinneNeural`.
+- **Dataset/course material:** none. The demo course text is fictional and labeled synthetic.
 
-HTML, CSS, JavaScript, browser APIs (Blob download), Node.js built-in HTTP server, and the iCalendar format. GitHub Actions is configured to publish a static Pages artifact containing index.html, dashboard.html, the src/ app assets, and two decorative images from assets/.
+No third-party runtime library, dataset, course document, or pre-existing application code is bundled.
 
-There are no runtime third-party packages or datasets. The two page illustrations were supplied by the entrant; the image-generation service/model is not recorded here and should be credited in the Devpost entry according to its terms. Deployment uses the official GitHub Pages actions actions/configure-pages, actions/upload-pages-artifact, and actions/deploy-pages.
+## Event fit and work window
 
-## Testing and verification
+LaunchPad Hacks asks for a working technology prototype, a clear account of event-period work, an accessible demo or walkthrough, setup steps, screenshots, a project/source link where possible, and attribution for third-party material and AI assistance. DateMark implementation began on **October 27, 2026**, during the published hacking window of **October 16–November 20, 2026**. The prototype and submission materials should only claim work actually completed in that window.
 
-Observed local checks:
+The Devpost story should include the entrant and any teammates. The repository maintainer is GitHub user [`@demonchanta`](https://github.com/demonchanta); use the actual eligible participant names in the Devpost team field rather than inferring names from a handle. Each participant must meet the event’s student, age-of-majority, and geographic requirements. Companies and organizers/judges are not eligible to compete.
 
-- **node tests/parser.test.js** — 7 parser/export checks passed.
-- **node tests/http-smoke.js** — local landing and dashboard pages, stylesheet, favicon, both image assets, dashboard navigation, no sample records, no remote fonts, and requested non-green/non-blue palette checks passed.
-- JavaScript syntax checks passed.
-- **docker --context desktop-linux compose config --quiet** passed; Docker engine access and the Playwright browser suite were blocked in this environment, so no browser E2E result is claimed.
+Submission closes **November 20, 2026 at 5:00 PM Eastern Time**. Online judging is **November 21 at 9:00 AM through November 25 at 5:00 PM Eastern Time**. Keep the demo and judging links accessible throughout that period. See the [official LaunchPad Hacks rules](https://launchpad-hacks.devpost.com/rules).
 
-These checks do not establish student demand, real syllabus coverage, browser-rendered accessibility, Pages deployment, or calendar-app import.
+## Judging criteria
 
-## LaunchPad Hacks judging criteria
+The event scores each criterion equally from 1 to 5:
 
-LaunchPad Hacks publishes four equally weighted criteria, each scored from 1 to 5. DateMark addresses them as follows:
+- **Innovation & Originality:** a deliberately focused source-linked review flow. Related syllabus-to-calendar tools exist; DateMark does not claim uniqueness.
+- **Usefulness & Impact:** addresses the manual handoff from course wording to a calendar. User demand and impact remain unvalidated.
+- **Implementation & Functionality:** deterministic date parsing, source-line retention, editable review, confirmation, and `.ics` export are implemented.
+- **Design & Presentation:** a landing page introduces the workflow and a separate dashboard demonstrates it, with explicit limitations and source evidence.
 
-- **Innovation & Originality:** A deliberately narrow, source-linked, deterministic review flow. Existing syllabus-to-calendar products are competitors; DateMark does not claim to be unique, and this distinction needs user validation.
-- **Usefulness & Impact:** A prototype for reducing retyping and surfacing date ambiguity for students. The problem and expected value are not yet supported by interviews or measured outcomes.
-- **Implementation & Functionality:** Real parsing, source-span retention, editable review states, confirmation checks, and iCalendar serialization are implemented. Unit checks pass; the browser workflow still needs end-to-end verification.
-- **Design & Presentation:** A product landing page explains the workflow and limits and links to a separate dashboard for the working tool. Browser-rendered accessibility and responsive interaction still need verification.
+## Limitations and verification status
 
-## Originality, attribution, and event work
+- Only English month-name and ISO dates on coursework-related lines are supported. Numeric and relative dates, missing years, scanned PDFs, LMS sync, change detection, conflicting-source resolution, reminders, cloud storage, and multi-user collaboration are outside this version.
+- Exported events are all-day events; no time or timezone is inferred. DateMark does not verify an external calendar import.
+- User demand and performance on a representative syllabus corpus have not been measured.
+- Local parser checks (7 cases), HTTP smoke checks, JavaScript syntax checks, and Docker Compose syntax validation were recorded in [`evidence/local-verification.md`](evidence/local-verification.md). Those checks do not establish user impact or browser-rendered accessibility.
+- The Playwright browser suite remains **BLOCKED** in the recorded environment because Docker engine and package-registry access were unavailable. No successful browser E2E run is claimed.
+- The user reports the Pages site is live. Confirm the current landing and dashboard URLs load before final submission; the repository contains their published source and the Pages workflow.
 
-DateMark implementation began on October 27, 2026, within the event work window. The prototype is newly written for this submission; no pre-existing product code or course dataset is included. The synthetic sample above is explicitly marked as fabricated test text.
+## Further repository material
 
-The Devpost entry must list the actual eligible entrant and any teammates; no team roster or institution is asserted in this README. Every listed participant must satisfy the official student, age-of-majority, and geographic requirements. Companies are excluded, and organizers/judges may not compete for awards.
+- [`docs/deployment.md`](docs/deployment.md) — local serving, Pages deployment, and configuration status.
+- [`tests/`](tests/) — deterministic parser and HTTP smoke checks.
+- [`evidence/`](evidence/) — verification index and recorded results/limits.
+- [`media/`](media/) — submission screenshots.
 
-**AI assistance disclosure:** OpenAI Codex assisted with event research, product planning, implementation, and documentation. The shipped product contains no AI feature, model, AI SDK, or model/API request.
-
-The runtime app uses no third-party code packages or datasets. Two generated illustrations supplied by the entrant are included; the generator/model attribution must be added to Devpost if required by that tool's terms. The deployment workflow calls the official GitHub Pages Actions listed above. Follow their licenses and current terms when deploying.
-
-## Publishing setup
-
-The workflow at .github/workflows/pages.yml triggers on pushes to main. It prepares a deployment artifact from only index.html, dashboard.html, the src/ app files, and the two image assets; it does not publish this README, the Build Standard, the Rebuild Playbook, or research/evidence documents.
-
-For the workflow to deploy:
-
-1. In the repository, open **Settings → Pages**.
-2. Under **Build and deployment**, set **Source** to **GitHub Actions** and save.
-3. Open **Actions** and rerun the failed **Deploy DateMark to GitHub Pages** workflow, or push a new commit to main.
-4. Wait for the deployment job to succeed, then verify https://demonchant.github.io/DateMark/ loads before sharing it.
-
-The initial **Get Pages site failed / Not Found** error was resolved when the user selected GitHub Actions as the Pages source. The user reports the original public landing page is working. The latest local push attempt ended with a connection reset; the remote still has the older landing page. Push the prepared dashboard and assets, rerun deployment, and verify the dashboard route before sharing it.
-
-## Event submission checklist
-
-The official rules require one completed Devpost project page with the project name, pitch, team members, problem, users, solution, technology, challenges, learning, limitations, and an accessible demo/build/walkthrough with setup instructions. Include screenshots; a 2-3 minute demo video is encouraged. Credit libraries, datasets, assets, AI assistance, and pre-existing work, and submit only material you have permission to use. Keep judging links available during November 21-25, 2026. Submit one project entry by November 20, 2026 at 5:00 PM Eastern Time. Participants must follow the community conduct rules and must not include private personal information, secrets, or malicious content. See the [official LaunchPad Hacks rules](https://launchpad-hacks.devpost.com/rules) for eligibility, originality, attribution, dates, and conduct requirements.
-
-Before submission, verify entrant geographic eligibility, finish the Pages deployment, run the browser walkthrough, capture genuine screenshots/video, confirm the actual public links work, and submit the final Devpost project page. No submission receipt or judging outcome is claimed here.
+The GitHub Pages workflow publishes only the app files, dashboard, source assets, and illustrations. It does not publish the Build Standard, Rebuild Playbook, research notes, tests, evidence, or this README as part of the hosted app.
